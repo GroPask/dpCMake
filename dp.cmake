@@ -1,6 +1,9 @@
 include(FetchContent)
 
-set(CMAKE_CONFIGURATION_TYPES Debug Release CACHE STRING INTERNAL FORCE) # Forced to use global variable to do this
+if (NOT DEFINED ENV{CMAKE_BUILD_TYPE})
+    set(CMAKE_CONFIGURATION_TYPES Debug Release CACHE STRING INTERNAL FORCE) # Forced to use global variable to do this
+endif ()
+
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 #set(CMAKE_VERBOSE_MAKEFILE ON)
