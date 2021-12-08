@@ -1,7 +1,11 @@
 include(FetchContent)
 
-if (NOT DEFINED ENV{CMAKE_BUILD_TYPE})
+if (NOT DEFINED CMAKE_BUILD_TYPE AND NOT DEFINED ENV{CMAKE_BUILD_TYPE})
     set(CMAKE_CONFIGURATION_TYPES Debug Release CACHE STRING INTERNAL FORCE) # Forced to use global variable to do this
+elseif (DEFINED CMAKE_BUILD_TYPE)
+    set(CMAKE_CONFIGURATION_TYPES ${CMAKE_BUILD_TYPE} CACHE STRING INTERNAL FORCE) # Forced to use global variable to do this
+else ()
+    set(CMAKE_CONFIGURATION_TYPES $ENV{CMAKE_BUILD_TYPE} CACHE STRING INTERNAL FORCE) # Forced to use global variable to do this
 endif ()
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)

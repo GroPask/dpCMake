@@ -169,7 +169,6 @@ function (dp_get_conan_lib)
     endif ()
 
     set(CONAN_CMAKE_MULTI ON)
-    set(ARGUMENTS_CONFIGURATION_TYPES "Release;Debug")
 
     if (${shouldRerunConanInstall})
         foreach (arg IN LISTS DP_CONAN_OPTIONS_UNPARSED_ARGUMENTS)
@@ -184,7 +183,7 @@ function (dp_get_conan_lib)
         #    BUILD missing
         #)
 
-        foreach(CMAKE_BUILD_TYPE ${ARGUMENTS_CONFIGURATION_TYPES})
+        foreach(CMAKE_BUILD_TYPE ${CMAKE_CONFIGURATION_TYPES})
             if (DEFINED DP_CONAN_OPTIONS_CONAN_IMPORT_PATH_PREFIX)
                 set(ENV{CONAN_IMPORT_PATH} ${DP_CONAN_OPTIONS_CONAN_IMPORT_PATH_PREFIX}${CMAKE_BUILD_TYPE})
             else ()
