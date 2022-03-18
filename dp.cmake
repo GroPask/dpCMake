@@ -73,16 +73,21 @@ function (dp_add_target target targetType)
         endif ()
     endif ()
 
+    set(projectRootDir ${PROJECT_SOURCE_DIR})
+    if (DEFINED DP_CMAKE_PROJECT_ROOT_DIR)
+        set(projectRootDir ${DP_CMAKE_PROJECT_ROOT_DIR})
+    endif ()
+
     set(folder "")
     if (${MY_OPTIONS_ADD_PROJECT_PARENT_FOLDER})
-        string(REPLACE "/" ";" projectSourceList ${PROJECT_SOURCE_DIR})
+        string(REPLACE "/" ";" projectSourceList ${projectRootDir})
         list(POP_BACK projectSourceList projectParent)
 
         set(folder ${projectParent})
     endif ()
 
-    if (${CMAKE_CURRENT_SOURCE_DIR} MATCHES "^${PROJECT_SOURCE_DIR}.+")
-        file(RELATIVE_PATH relativePathFromProject ${PROJECT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
+    if (${CMAKE_CURRENT_SOURCE_DIR} MATCHES "^${projectRootDir}.+")
+        file(RELATIVE_PATH relativePathFromProject ${projectRootDir} ${CMAKE_CURRENT_SOURCE_DIR})
 
         if (relativePathFromProject MATCHES ".*/.*")
             string(REPLACE "/" ";" relativePathFromProjectParent ${relativePathFromProject})
