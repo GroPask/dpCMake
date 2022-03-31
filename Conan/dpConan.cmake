@@ -43,7 +43,7 @@ function (dp_check_conan_available)
         if (${existingRemote} EQUAL -1)
             conan_add_remote(
                 NAME dp-conan
-                URL https://gropask.jfrog.io/artifactory/api/conan/dp-conan
+                URL http://213.32.17.231:9300
             )
         endif ()
     else ()
