@@ -1,6 +1,6 @@
 include_guard()
 
-include(Tools/Tools.cmake)
-include(Tools/Warnings.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/Tools/Tools.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/Tools/Warnings.cmake)
 
-include(Tools/ConfigureTarget.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/Tools/ConfigureTarget.cmake)
