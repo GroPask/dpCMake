@@ -4,12 +4,12 @@ include(${CMAKE_CURRENT_LIST_DIR}/TargetTools.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/Warnings.cmake)
 
 function (dp_configure_target target)
-    set(options WARNINGS WIN32_RELEASE VS_STARTUP_PROJECT AUTO_SOURCE_GROUP)
+    set(options DP_WARNINGS WIN32_RELEASE VS_STARTUP_PROJECT AUTO_SOURCE_GROUP)
     set(oneValueArgs)
     set(multiValueArgs)
     cmake_parse_arguments(DP_CONFIGURE_TARGET_OPTIONS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
-    if (DP_CONFIGURE_TARGET_OPTIONS_WARNINGS)
+    if (DP_CONFIGURE_TARGET_OPTIONS_DP_WARNINGS)
         dp_target_configure_warnings(${target})
     endif ()
 
