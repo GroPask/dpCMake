@@ -43,6 +43,7 @@ function (dp_check_conan_available)
         if (${existingRemote} EQUAL -1)
             conan_add_remote(
                 NAME dp-conan
+                INDEX 0
                 URL http://213.32.17.231:9300
             )
         endif ()
