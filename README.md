@@ -1,7 +1,7 @@
 # dpCMake
 
 ## Introduction
-Simple cmake library for my projects
+Simple CMake helper library.
 
 ## Examples
 
