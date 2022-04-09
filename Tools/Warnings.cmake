@@ -1,5 +1,7 @@
 include_guard()
 
+# Inspired by https://github.com/cpp-best-practices/cpp_starter_project
+
 function (dp_target_configure_warnings target)
     set(msvcWarnings
         /W4 # Baseline reasonable warnings
