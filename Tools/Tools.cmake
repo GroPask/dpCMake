@@ -10,7 +10,7 @@ function (dp_target_set_win32_executable_in_realease target)
 endfunction ()
 
 function (dp_target_set_vs_startup_project target)
-    set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${target})
+    set_property(DIRECTORY ${PROJECT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${target})
 endfunction ()
 
 function (dp_target_auto_source_group target)
