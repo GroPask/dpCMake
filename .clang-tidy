@@ -1,0 +1,8 @@
+---
+Checks:             '*,-abseil-*,-fuchsia-*,-google-*,-hicpp-*,-llvm-*,-llvmlibc-*,-zircon-*,-modernize-use-trailing-return-type,-readability-uppercase-literal-suffix'
+WarningsAsErrors:   ''
+HeaderFilterRegex:  ''
+FormatStyle:        file
+CheckOptions:
+  - key:            readability-braces-around-statements.ShortStatementLines
+    value:          '2'
