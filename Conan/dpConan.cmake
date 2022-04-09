@@ -39,7 +39,7 @@ function (dp_check_conan_available)
             )
         endif ()
 
-        string(FIND "${REMOTE_LIST_OUTPUT}" "conan/dp-conan" existingRemote)
+        string(FIND "${REMOTE_LIST_OUTPUT}" "dp-conan" existingRemote)
         if (${existingRemote} EQUAL -1)
             conan_add_remote(
                 NAME dp-conan
