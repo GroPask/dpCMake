@@ -1,10 +1,5 @@
 include_guard()
 
-function (dp_active_folders)
-    set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-    set_property(GLOBAL PROPERTY AUTOGEN_SOURCE_GROUP "Generated")
-endfunction ()
-
 function (dp_target_set_win32_executable_in_realease target)
     set_target_properties(${target} PROPERTIES WIN32_EXECUTABLE $<IF:$<OR:$<CONFIG:Release>,$<CONFIG:MinSizeRel>>,true,false>)
 endfunction ()
