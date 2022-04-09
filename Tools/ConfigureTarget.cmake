@@ -9,7 +9,7 @@ function (dp_configure_target target)
     set(multiValueArgs)
     cmake_parse_arguments(DP_CONFIGURE_TARGET_OPTIONS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
-    if (DP_CONFIGURE_TARGET_OPTIONS_ARNINGS)
+    if (DP_CONFIGURE_TARGET_OPTIONS_WARNINGS)
         dp_target_configure_warnings(${target})
     endif ()
 
