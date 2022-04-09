@@ -1,6 +1,6 @@
 include_guard()
 
-include(${CMAKE_CURRENT_LIST_DIR}/Tools/GlobalTools.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/GlobalTools.cmake)
 
 function (dp_configure_global)
     set(options USE_FOLDERS)
