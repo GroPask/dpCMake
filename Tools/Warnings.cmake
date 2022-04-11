@@ -29,6 +29,10 @@ function (dp_target_configure_warnings target)
         /permissive- # standards conformance mode for MSVC compiler.
     )
 
+    set(msvcLinkWarnings
+        /ignore:4099 # Disable warning 'pdb not found'
+    )
+
     set(clangWarnings
         -Wall
         -Wextra # reasonable and standard
@@ -48,6 +52,9 @@ function (dp_target_configure_warnings target)
         -Wimplicit-fallthrough # warn on statements that fallthrough without an explicit annotation
     )
 
+    set(clangLinkWarnings
+    )
+
     set(gccWarnings
         ${clangWarnings}
         -Wmisleading-indentation # warn if indentation implies blocks where blocks do not exist
@@ -57,15 +64,23 @@ function (dp_target_configure_warnings target)
         -Wuseless-cast # warn if you perform a cast to the same type
     )
 
+    set(gccLinkWarnings
+        ${clangLinkWarnings}
+    )
+
     if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
         set(warnings ${msvcWarnings})
+        set(linkWarnings ${msvcLinkWarnings})
     elseif(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
         set(warnings ${clangWarnings})
+        set(linkWarnings ${clangLinkWarnings})
     elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
        set(warnings ${gccWarnings})
+       set(linkWarnings ${gccLinkWarnings})
     else()
         message(AUTHOR_WARNING "No compiler warnings set for CXX compiler: '${CMAKE_CXX_COMPILER_ID}'")
     endif()
 
     target_compile_options(${target} PRIVATE ${warnings})
+    target_link_options(${target} PRIVATE ${linkWarnings})
 endfunction ()
