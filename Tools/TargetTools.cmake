@@ -11,9 +11,16 @@ endfunction ()
 function (dp_target_auto_source_group target)
     get_target_property(sources ${target} SOURCES)
 
+    get_target_property(targetSourceDir ${target} SOURCE_DIR)
+    get_target_property(targetBinaryDir ${target} BINARY_DIR)
+
     foreach (source ${sources})
         get_filename_component(absoluteSource ${source} ABSOLUTE)
 
+        if (${absoluteSource} MATCHES "^${targetSourceDir}.*")
+            source_group(TREE ${targetSourceDir} FILES ${absoluteSource})
+        elseif (${absoluteSource} MATCHES "^${targetBinaryDir}.*")
+            source_group(TREE ${targetBinaryDir} FILES ${absoluteSource})
         if (${absoluteSource} MATCHES "^${CMAKE_CURRENT_SOURCE_DIR}.*")
             source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${absoluteSource})
         elseif (${absoluteSource} MATCHES "^${CMAKE_CURRENT_BINARY_DIR}.*")
