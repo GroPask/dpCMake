@@ -86,20 +86,28 @@ function (dp_add_target target targetType)
         set(folder ${projectParent})
     endif ()
 
-    if (${MY_OPTIONS_REMOVE_TARGET_FIRST_PARENT_FOLDER})
-        if (${CMAKE_CURRENT_SOURCE_DIR} MATCHES "^${projectRootDir}.+")
-            file(RELATIVE_PATH relativePathFromProject ${projectRootDir} ${CMAKE_CURRENT_SOURCE_DIR})
-    
+    if (${CMAKE_CURRENT_SOURCE_DIR} MATCHES "^${projectRootDir}.+")
+        file(RELATIVE_PATH relativePathFromProject ${projectRootDir} ${CMAKE_CURRENT_SOURCE_DIR})
+
+        set(newFolderPart ${relativePathFromProject})
+
+        if (${MY_OPTIONS_REMOVE_TARGET_FIRST_PARENT_FOLDER})    
             if (relativePathFromProject MATCHES ".*/.*")
                 string(REPLACE "/" ";" relativePathFromProjectParent ${relativePathFromProject})
                 list(POP_BACK relativePathFromProjectParent relativePathFromProjectLastDir)
                 string(REPLACE ";" "/" relativePathFromProjectParent "${relativePathFromProjectParent}")
-    
-                if (folder STREQUAL "")
-                    set(folder ${relativePathFromProjectParent})
-                else ()
-                    set(folder ${folder}/${relativePathFromProjectParent})
-                endif ()
+
+                set(newFolderPart ${relativePathFromProjectParent})
+            else ()
+                set(newFolderPart "")
+            endif ()
+        endif ()
+
+        if (NOT newFolderPart STREQUAL "")
+            if (folder STREQUAL "")
+                set(folder ${newFolderPart})
+            else ()
+                set(folder ${folder}/${newFolderPart})
             endif ()
         endif ()
     endif ()
