@@ -105,7 +105,7 @@ endfunction ()
 
 ##############################################################
 # dp_get_conan_generate_conan_file
-function (dp_get_conan_generate_conan_file_string outStringVar)
+function (dp_get_conan_generate_conan_file_string outStringVar dependenciesOptions)
     set(stringVar "")
 
     string(APPEND stringVar "import os\n")
@@ -126,7 +126,11 @@ function (dp_get_conan_generate_conan_file_string outStringVar)
     endforeach ()
     string(APPEND stringVar "\n")
 
-    string(APPEND stringVar "    default_options = \"qt:shared=True\", \"imgui:shared=True\", \"glad:shared=True\", \"glfw:shared=True\"\n")
+    string(APPEND stringVar "    default_options = \"imgui:shared=True\", \"glad:shared=True\", \"glfw:shared=True\"")
+    foreach (dependencyOption IN LISTS dependenciesOptions)
+        string(APPEND stringVar ", \"" ${dependencyOption} "\"")
+    endforeach ()
+    string(APPEND stringVar "\n")
 
     string(APPEND stringVar "    generators = \"cmake\"\n")
     string(APPEND stringVar "    def imports(self):\n")
@@ -151,14 +155,14 @@ endfunction ()
 function (dp_get_conan_lib)
     set(options)
     set(oneValueArgs CONAN_IMPORT_PATH_PREFIX)
-    set(multiValueArgs)
+    set(multiValueArgs DEPENDENCIES_OPTIONS)
     cmake_parse_arguments(DP_CONAN_OPTIONS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
     dp_check_conan_available()
 
     set(conanFilePath "${CMAKE_CURRENT_BINARY_DIR}/conanfile.py")
 
-    dp_get_conan_generate_conan_file_string(conanFileWantedContent ${DP_CONAN_OPTIONS_UNPARSED_ARGUMENTS})
+    dp_get_conan_generate_conan_file_string(conanFileWantedContent ${DP_CONAN_OPTIONS_DEPENDENCIES_OPTIONS} ${DP_CONAN_OPTIONS_UNPARSED_ARGUMENTS})
 
     set(shouldRerunConanInstall true)
     if (EXISTS ${conanFilePath})
