@@ -109,6 +109,19 @@ function (dp_download_and_add_dependency)
 
     if (NOT ${dependencyWasAlreadyPopulated})
         add_subdirectory(${dependencySrcDir} ${dependencyBinDir} EXCLUDE_FROM_ALL SYSTEM)
+
+        get_property(dependenciesTargetsFolder GLOBAL PROPERTY DP_DEPENDENCIES_TARGETS_FOLDER)
+        if (DEFINED dependenciesTargetsFolder)
+            dp_get_targets_list(newTargets DIRECTORY ${dependencySrcDir} RECURSE)
+
+            foreach (newTarget ${newTargets})
+                get_target_property(newTargetType ${newTarget} TYPE)
+
+                if (NOT ${newTargetType} STREQUAL "INTERFACE_LIBRARY")                    
+                    set_target_properties(${newTarget} PROPERTIES FOLDER ${dependenciesTargetsFolder})
+                endif ()
+            endforeach ()
+        endif ()
     endif ()
 
     if (DEFINED DP_DOWNLOAD_AND_ADD_DEPENDENCY_ALREADY_POPULATED_VAR)
