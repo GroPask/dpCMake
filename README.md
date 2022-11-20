@@ -4,6 +4,9 @@
 Simple CMake helper library.
 
 ## Reference
+Simple list of all available features.
+
+Named arguments are generally optionals.
 
 #### Getting dpCMake
 ```cmake
@@ -41,7 +44,7 @@ dp_configure_target(target
 ```cmake
 dp_add_relative_directory("../MyRelativeProject")
 
-dp_download_dependency(                                 # dp_download_and_add_dependency
+dp_download_dependency(                                 # Or dp_download_and_add_dependency
     GIT_REPOSITORY https://github.com/fmtlib/fmt.git    # Or URL, SVN_REPOSITORY, HG_REPOSITORY, CVS_REPOSITORY
     GIT_TAG 9.1.0                                       # Or anything supported by FetchContent_Declare
     PATCH_SRC_FUNC fmtPathFunc
