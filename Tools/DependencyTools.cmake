@@ -26,3 +26,70 @@ function (dp_add_relative_directory relativePath)
 
     FetchContent_MakeAvailable(${fetchContentName})
 endfunction ()
+
+function (dp_download_dependency)
+    set(options)
+    set(oneValueArgs URL GIT_REPOSITORY SVN_REPOSITORY HG_REPOSITORY CVS_REPOSITORY PATCH_SRC_FUNC ALREADY_POPULATED_VAR SRC_DIR_VAR BIN_DIR_VAR)
+    set(multiValueArgs)
+    cmake_parse_arguments(DP_DOWNLOAD_DEPENDENCY "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+
+    if (DEFINED DP_DOWNLOAD_DEPENDENCY_URL)
+        set(downloadMethod URL)
+        set(downloadAddress ${DP_DOWNLOAD_DEPENDENCY_URL})
+    elseif (DEFINED DP_DOWNLOAD_DEPENDENCY_GIT_REPOSITORY)
+        set(downloadMethod GIT_REPOSITORY)
+        set(downloadAddress ${DP_DOWNLOAD_DEPENDENCY_GIT_REPOSITORY})
+    elseif (DEFINED DP_DOWNLOAD_DEPENDENCY_SVN_REPOSITORY)
+        set(downloadMethod SVN_REPOSITORY)
+        set(downloadAddress ${DP_DOWNLOAD_DEPENDENCY_SVN_REPOSITORY})
+    elseif (DEFINED DP_DOWNLOAD_DEPENDENCY_HG_REPOSITORY)
+        set(downloadMethod HG_REPOSITORY)
+        set(downloadAddress ${DP_DOWNLOAD_DEPENDENCY_HG_REPOSITORY})
+    elseif (DEFINED DP_DOWNLOAD_DEPENDENCY_CVS_REPOSITORY)
+        set(downloadMethod CVS_REPOSITORY)
+        set(downloadAddress ${DP_DOWNLOAD_DEPENDENCY_CVS_REPOSITORY})
+    else ()
+        message(AUTHOR_WARNING "dpCMake: No download method given to dp_download_dependency")
+        return()
+    endif ()
+
+    dp_compute_fetch_content_name(fetchContentName ${downloadAddress})
+
+    FetchContent_Declare(${fetchContentName}
+        ${downloadMethod} ${downloadAddress}
+        ${DP_DOWNLOAD_DEPENDENCY_UNPARSED_ARGUMENTS}
+    )
+
+    FetchContent_GetProperties(${fetchContentName})
+    if (NOT ${fetchContentName}_POPULATED)
+        FetchContent_Populate(${fetchContentName})
+
+        set(alreadyPopulated false)
+        set(srcDir ${${fetchContentName}_SOURCE_DIR})
+        set(binDir ${${fetchContentName}_BINARY_DIR})
+
+        if (DEFINED DP_DOWNLOAD_DEPENDENCY_PATCH_SRC_FUNC)
+            set(patchMarkFile "${srcDir}/patchedByDpCMake.junk")
+            if (NOT EXISTS ${patchMarkFile})
+                cmake_language(CALL ${DP_DOWNLOAD_DEPENDENCY_PATCH_SRC_FUNC} ${srcDir})
+                file(TOUCH ${patchMarkFile})
+            endif ()   
+        endif ()
+    else ()
+        set(alreadyPopulated TRUE)
+        set(srcDir ${${fetchContentName}_SOURCE_DIR})
+        set(binDir ${${fetchContentName}_BINARY_DIR})
+    endif ()
+
+    if (DEFINED DP_DOWNLOAD_DEPENDENCY_ALREADY_POPULATED_VAR)
+        set(${DP_DOWNLOAD_DEPENDENCY_ALREADY_POPULATED_VAR} ${alreadyPopulated} PARENT_SCOPE)
+    endif ()
+
+    if (DEFINED DP_DOWNLOAD_DEPENDENCY_SRC_DIR_VAR)
+        set(${DP_DOWNLOAD_DEPENDENCY_SRC_DIR_VAR} ${srcDir} PARENT_SCOPE)
+    endif ()
+
+    if (DEFINED DP_DOWNLOAD_DEPENDENCY_BIN_DIR_VAR)   
+        set(${DP_DOWNLOAD_DEPENDENCY_BIN_DIR_VAR} ${binDir} PARENT_SCOPE)
+    endif ()
+endfunction ()
