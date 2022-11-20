@@ -1,6 +1,6 @@
 include_guard()
 
-function (dp_compute_fetch_content_name outFetchContentNameVar originalPath)
+function (_dp_compute_fetch_content_name outFetchContentNameVar originalPath)
     set(fetchContentName ${originalPath})
 
     string(REGEX REPLACE "^https://" "" fetchContentName "${fetchContentName}")
@@ -18,7 +18,7 @@ function (dp_compute_fetch_content_name outFetchContentNameVar originalPath)
 endfunction ()
 
 function (dp_add_relative_directory relativePath)
-    dp_compute_fetch_content_name(fetchContentName ${relativePath})
+    _dp_compute_fetch_content_name(fetchContentName ${relativePath})
 
     FetchContent_Declare(${fetchContentName}
         SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/${relativePath}"
@@ -53,7 +53,7 @@ function (dp_download_dependency)
         return()
     endif ()
 
-    dp_compute_fetch_content_name(fetchContentName ${downloadAddress})
+    _dp_compute_fetch_content_name(fetchContentName ${downloadAddress})
 
     FetchContent_Declare(${fetchContentName}
         ${downloadMethod} ${downloadAddress}
