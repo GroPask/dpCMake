@@ -93,3 +93,33 @@ function (dp_download_dependency)
         set(${DP_DOWNLOAD_DEPENDENCY_BIN_DIR_VAR} ${binDir} PARENT_SCOPE)
     endif ()
 endfunction ()
+
+function (dp_download_and_add_dependency)
+    set(options)
+    set(oneValueArgs ALREADY_POPULATED_VAR SRC_DIR_VAR BIN_DIR_VAR)
+    set(multiValueArgs)
+    cmake_parse_arguments(DP_DOWNLOAD_AND_ADD_DEPENDENCY "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+
+    dp_download_dependency(
+        ${DP_DOWNLOAD_AND_ADD_DEPENDENCY_UNPARSED_ARGUMENTS}
+        ALREADY_POPULATED_VAR dependencyWasAlreadyPopulated
+        SRC_DIR_VAR dependencySrcDir
+        BIN_DIR_VAR dependencyBinDir
+    )
+
+    if (NOT ${dependencyWasAlreadyPopulated})
+        add_subdirectory(${dependencySrcDir} ${dependencyBinDir} EXCLUDE_FROM_ALL SYSTEM)
+    endif ()
+
+    if (DEFINED DP_DOWNLOAD_AND_ADD_DEPENDENCY_ALREADY_POPULATED_VAR)
+        set(${DP_DOWNLOAD_AND_ADD_DEPENDENCY_ALREADY_POPULATED_VAR} ${dependencyWasAlreadyPopulated} PARENT_SCOPE)
+    endif ()
+
+    if (DEFINED DP_DOWNLOAD_AND_ADD_DEPENDENCY_SRC_DIR_VAR)
+        set(${DP_DOWNLOAD_AND_ADD_DEPENDENCY_SRC_DIR_VAR} ${dependencySrcDir} PARENT_SCOPE)
+    endif ()
+
+    if (DEFINED DP_DOWNLOAD_AND_ADD_DEPENDENCY_BIN_DIR_VAR)   
+        set(${DP_DOWNLOAD_AND_ADD_DEPENDENCY_BIN_DIR_VAR} ${dependencyBinDir} PARENT_SCOPE)
+    endif ()
+endfunction ()
