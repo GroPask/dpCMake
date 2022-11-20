@@ -4,8 +4,7 @@
 Simple CMake helper library.
 
 ## Reference
-Simple list of all available features.
-
+List of all available features.
 Named arguments are generally optionals.
 
 #### Getting dpCMake
