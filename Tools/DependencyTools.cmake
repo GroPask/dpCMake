@@ -1,5 +1,7 @@
 include_guard()
 
+include(FetchContent)
+
 function (_dp_compute_fetch_content_name outFetchContentNameVar originalPath)
     set(fetchContentName ${originalPath})
 
