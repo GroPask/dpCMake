@@ -22,3 +22,6 @@ dp_configure_target(${PROJECT_NAME}
     VS_STARTUP_PROJECT
     AUTO_SOURCE_GROUP
 )
+
+enable_testing()
+add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})
