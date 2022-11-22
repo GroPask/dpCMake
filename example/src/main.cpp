@@ -1,6 +1,6 @@
-#include <cstdio>
+#include <fmt/core.h>
 
 int main()
 {
-    std::printf("Hello World !\n");
+    fmt::print("Hello World !\n");
 }
