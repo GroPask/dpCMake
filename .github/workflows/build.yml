@@ -21,7 +21,7 @@ jobs:
       run: cmake -S ${{github.workspace}}/test -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{matrix.build_type}}
 
     - name: Build
-      run: cmake --build ${{github.workspace}}/build
+      run: cmake --build ${{github.workspace}}/build --config ${{matrix.build_type}}
 
     - name: Test
       working-directory: ${{github.workspace}}/build
