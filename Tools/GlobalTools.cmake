@@ -1,6 +1,6 @@
 include_guard()
 
-function (dp_global_set_default_configurations)
+function (dp_set_default_configurations)
     if (NOT DEFINED CMAKE_BUILD_TYPE AND NOT DEFINED ENV{CMAKE_BUILD_TYPE})
         set(CMAKE_CONFIGURATION_TYPES ${ARGN} CACHE STRING INTERNAL FORCE)
     elseif (DEFINED CMAKE_BUILD_TYPE)
@@ -10,11 +10,11 @@ function (dp_global_set_default_configurations)
     endif ()
 endfunction ()
 
-function (dp_global_use_folders)
+function (dp_set_use_folders)
     set_property(GLOBAL PROPERTY USE_FOLDERS ON)    
 endfunction ()
 
-function (dp_global_set_generated_source_group generatedSourceGroup)
+function (dp_set_generated_source_group generatedSourceGroup)
     set_property(GLOBAL PROPERTY AUTOGEN_SOURCE_GROUP ${generatedSourceGroup})
 endfunction ()
 

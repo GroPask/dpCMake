@@ -9,15 +9,15 @@ function (dp_configure_global)
     cmake_parse_arguments(DP_CONFIGURE_GLOBAL_OPTIONS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
     if (DEFINED DP_CONFIGURE_GLOBAL_OPTIONS_DEFAULT_CONFIGURATIONS)
-        dp_global_set_default_configurations(${DP_CONFIGURE_GLOBAL_OPTIONS_DEFAULT_CONFIGURATIONS})
+        dp_set_default_configurations(${DP_CONFIGURE_GLOBAL_OPTIONS_DEFAULT_CONFIGURATIONS})
     endif ()
 
     if (DP_CONFIGURE_GLOBAL_OPTIONS_USE_FOLDERS)
-        dp_global_use_folders()
+        dp_set_use_folders()
     endif ()
 
     if (DEFINED DP_CONFIGURE_GLOBAL_OPTIONS_GENERATED_SOURCE_GROUP)
-        dp_global_set_generated_source_group(${DP_CONFIGURE_GLOBAL_OPTIONS_GENERATED_SOURCE_GROUP})
+        dp_set_generated_source_group(${DP_CONFIGURE_GLOBAL_OPTIONS_GENERATED_SOURCE_GROUP})
     endif ()
 
     if (DEFINED DP_CONFIGURE_GLOBAL_OPTIONS_DEPENDENCIES_TARGETS_FOLDER)
