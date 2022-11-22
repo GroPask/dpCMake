@@ -12,10 +12,7 @@ Named arguments are generally optionals.
 ```cmake
 include(FetchContent)
 
-FetchContent_Declare(dpCMake
-    GIT_REPOSITORY https://github.com/GroPask/dpCMake.git
-    GIT_TAG 0.0.1
-)
+FetchContent_Declare(dpCMake URL https://github.com/GroPask/dpCMake/archive/refs/tags/v0.0.3.zip)
 FetchContent_MakeAvailable(dpCMake)
 
 include(${dpcmake_SOURCE_DIR}/dpCMake.cmake)
@@ -23,6 +20,13 @@ include(${dpcmake_SOURCE_DIR}/dpCMake.cmake)
 
 #### Global configuration
 ```cmake
+dp_set_use_folders()
+dp_set_default_configurations(Debug Release)
+dp_set_generated_source_group(Generated)
+dp_set_dependencies_targets_folder(Dependencies)
+
+# Or
+
 dp_configure_global(
     USE_FOLDERS
     DEFAULT_CONFIGURATIONS Debug Release
@@ -33,6 +37,13 @@ dp_configure_global(
 
 #### Target configuration
 ```cmake
+dp_target_configure_warnings(target)
+dp_target_set_vs_startup_project(target)
+dp_target_set_win32_executable_in_realease(target)
+dp_target_auto_source_group(target)
+
+# Or
+
 dp_configure_target(target
     DP_WARNINGS
     VS_STARTUP_PROJECT
