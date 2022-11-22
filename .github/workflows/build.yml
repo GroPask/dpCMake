@@ -24,4 +24,5 @@ jobs:
       run: cmake --build ${{github.workspace}}/build
 
     - name: Test
-      run: ${{github.workspace}}/test/test/Test
+      working-directory: ${{github.workspace}}/build
+      run: ctest -C ${{ matrix.build_type }}
