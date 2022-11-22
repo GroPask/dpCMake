@@ -110,7 +110,11 @@ function (dp_download_and_add_dependency)
     )
 
     if (NOT ${dependencyWasAlreadyPopulated})
-        add_subdirectory(${dependencySrcDir} ${dependencyBinDir} EXCLUDE_FROM_ALL SYSTEM)
+        if (${CMAKE_VERSION} VERSION_LESS "3.25.0") 
+            add_subdirectory(${dependencySrcDir} ${dependencyBinDir} EXCLUDE_FROM_ALL)
+        else ()
+            add_subdirectory(${dependencySrcDir} ${dependencyBinDir} EXCLUDE_FROM_ALL SYSTEM)
+        endif ()
 
         get_property(dependenciesTargetsFolder GLOBAL PROPERTY DP_DEPENDENCIES_TARGETS_FOLDER)
         if (DEFINED dependenciesTargetsFolder)
