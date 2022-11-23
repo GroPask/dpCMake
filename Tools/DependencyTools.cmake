@@ -112,8 +112,8 @@ function (dp_download_and_add_dependency)
     )
 
     if (NOT ${dependencyWasAlreadyPopulated})
-        if (DEFINED DP_DOWNLOAD_DEPENDENCY_CONFIGURE_FUNC)
-            cmake_language(CALL ${DP_DOWNLOAD_DEPENDENCY_CONFIGURE_FUNC})
+        if (DEFINED DP_DOWNLOAD_AND_ADD_DEPENDENCY_CONFIGURE_FUNC)
+            cmake_language(CALL ${DP_DOWNLOAD_AND_ADD_DEPENDENCY_CONFIGURE_FUNC})
         endif ()
 
         if (${CMAKE_VERSION} VERSION_LESS "3.25.0") 
