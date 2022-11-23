@@ -12,7 +12,7 @@ dp_configure_global(
 )
 
 function (patchFmt fmtSrcDir)
-    dp_replace_in_file(${fmtSrcDir}/CMakeLists.txt "option(FMT_DOC" [=[option(DP_CMAKE_TEST_OPTION_I_FMT "" ON)
+    dp_replace_in_file(${fmtSrcDir}/CMakeLists.txt "option(FMT_DOC" [=[option(DP_CMAKE_TEST_OPTION_IN_FMT "" ON)
 option(FMT_DOC]=])
 endfunction ()
 
