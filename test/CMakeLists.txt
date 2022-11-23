@@ -17,6 +17,10 @@ add_executable(${PROJECT_NAME})
 target_link_libraries(${PROJECT_NAME} fmt::fmt)
 add_subdirectory(src)
 
+if (WIN32)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE DP_CMAKE_TEST_WIN32)
+endif ()
+
 dp_configure_target(${PROJECT_NAME}
     DP_WARNINGS
     VS_STARTUP_PROJECT
