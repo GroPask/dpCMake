@@ -17,7 +17,7 @@ option(FMT_DOC]=])
 endfunction ()
 
 function (configureFmt)
-    option(DP_CMAKE_TEST_CONFIGURE_FM_OPTION "" ON)
+    option(DP_CMAKE_TEST_CONFIGURE_FMT_OPTION "" ON)
 endfunction ()
 
 dp_download_and_add_dependency(
