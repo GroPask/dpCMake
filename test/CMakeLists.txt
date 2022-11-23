@@ -20,6 +20,7 @@ add_subdirectory(src)
 dp_configure_target(${PROJECT_NAME}
     DP_WARNINGS
     VS_STARTUP_PROJECT
+    WIN32_RELEASE
     AUTO_SOURCE_GROUP
 )
 
