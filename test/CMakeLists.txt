@@ -16,13 +16,22 @@ function (patchFmt fmtSrcDir)
 option(FMT_DOC]=])
 endfunction ()
 
+function (configureFmt)
+    option(DP_CMAKE_TEST_CONFIGURE_FM_OPTION "" ON)
+endfunction ()
+
 dp_download_and_add_dependency(
     URL https://github.com/fmtlib/fmt/archive/refs/tags/9.1.0.zip
     PATCH_FUNC patchFmt
+    CONFIGURE_FUNC configureFmt
 )
 
 if (NOT DP_CMAKE_TEST_OPTION_IN_FMT)
     message(FATAL_ERROR "dpCMake: PATCH_FUNC is not working" )
+endif ()
+
+if (NOT DP_CMAKE_TEST_CONFIGURE_FMT_OPTION)
+    message(FATAL_ERROR "dpCMake: CONFIGURE_FUNC is not working" )
 endif ()
 
 add_executable(${PROJECT_NAME})

@@ -55,10 +55,11 @@ dp_configure_target(target
 ```cmake
 dp_add_relative_directory("../MyRelativeProject")
 
-dp_download_dependency(                                 # Or dp_download_and_add_dependency
+dp_download_and_adddependency(
     GIT_REPOSITORY https://github.com/fmtlib/fmt.git    # Or URL, SVN_REPOSITORY, HG_REPOSITORY, CVS_REPOSITORY
     GIT_TAG 9.1.0                                       # Or anything supported by FetchContent_Declare
     PATCH_FUNC patchFmt
+    CONFIGURE_FUNC configureFmt
     ALREADY_POPULATED_VAR fmtWasAlreadyPopulated
     SRC_DIR_VAR fmtSrcDir
     BIN_DIR_VAR fmtBinDir

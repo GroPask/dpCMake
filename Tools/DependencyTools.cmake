@@ -100,7 +100,7 @@ endfunction ()
 
 function (dp_download_and_add_dependency)
     set(options)
-    set(oneValueArgs ALREADY_POPULATED_VAR SRC_DIR_VAR BIN_DIR_VAR)
+    set(oneValueArgs CONFIGURE_FUNC ALREADY_POPULATED_VAR SRC_DIR_VAR BIN_DIR_VAR)
     set(multiValueArgs)
     cmake_parse_arguments(DP_DOWNLOAD_AND_ADD_DEPENDENCY "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
@@ -112,6 +112,10 @@ function (dp_download_and_add_dependency)
     )
 
     if (NOT ${dependencyWasAlreadyPopulated})
+        if (DEFINED DP_DOWNLOAD_DEPENDENCY_CONFIGURE_FUNC)
+            cmake_language(CALL ${DP_DOWNLOAD_DEPENDENCY_CONFIGURE_FUNC})
+        endif ()
+
         if (${CMAKE_VERSION} VERSION_LESS "3.25.0") 
             add_subdirectory(${dependencySrcDir} ${dependencyBinDir} EXCLUDE_FROM_ALL)
         else ()
