@@ -11,15 +11,32 @@ dp_configure_global(
     DEPENDENCIES_TARGETS_FOLDER Dependencies
 )
 
-dp_download_and_add_dependency(URL https://github.com/fmtlib/fmt/archive/refs/tags/9.1.0.zip)
+function (patchFmt fmtSrcDir)
+    dp_replace_in_file(${fmtSrcDir}/CMakeLists.txt "option(FMT_DOC" [=[option(DP_CMAKE_TEST_OPTION_IN_FMT "" ON)
+option(FMT_DOC]=])
+endfunction ()
+
+dp_download_and_add_dependency(
+    URL https://github.com/fmtlib/fmt/archive/refs/tags/9.1.0.zip
+    PATCH_SRC_FUNC patchFmt
+)
+
+if (NOT DP_CMAKE_TEST_OPTION_IN_FMT)
+    message(FATAL_ERROR "dpCMake: PATCH_SRC_FUNC is not working" )
+endif ()
 
 add_executable(${PROJECT_NAME})
 target_link_libraries(${PROJECT_NAME} fmt::fmt)
 add_subdirectory(src)
 
+if (WIN32)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE DP_CMAKE_TEST_WIN32)
+endif ()
+
 dp_configure_target(${PROJECT_NAME}
     DP_WARNINGS
     VS_STARTUP_PROJECT
+    WIN32_RELEASE
     AUTO_SOURCE_GROUP
 )
 

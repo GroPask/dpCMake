@@ -13,3 +13,12 @@ int main()
 
     return EXIT_SUCCESS;
 }
+
+#ifdef DP_CMAKE_TEST_WIN32
+#include <Windows.h>
+
+int WinMain(HINSTANCE /*hInstance*/, HINSTANCE /*hPrevInstance*/, PSTR /*lpCmdLine*/, INT /*nCmdShow*/)
+{
+    return main();
+}
+#endif
