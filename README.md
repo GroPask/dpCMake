@@ -68,7 +68,15 @@ dp_download_and_adddependency(
 
 #### Misc tools
 ```cmake
-dp_replace_in_file(filePath "ToReplace" "ReplacingString")
+dp_patch_file(filePath
+    REPLACE "ToReplace" "ReplacingString"
+    REMOVE "ToRemove"
+    ADD_BEFORE "RefText" "ToAddBefore"
+    ADD_AFTER "RefText" "ToAddAfter"
+    ADD_LINE_BEFORE "RefText" "LineToAddBefore"
+    ADD_LINE_AFTER "RefText" "LineToAddAfter"
+    APPEND_LINE "LineToAppend"
+)
 
 dp_get_targets_list(
     targetsList

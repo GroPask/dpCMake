@@ -1,7 +1,7 @@
 dp_download_and_add_dependency(URL https://github.com/fmtlib/fmt/archive/refs/tags/9.1.0.zip)
 
 function (patchSpdlog spdlogSrcDir)
-    dp_replace_in_file(${spdlogSrcDir}/CMakeLists.txt "set(CMAKE_BUILD_TYPE" "#set(CMAKE_BUILD_TYPE")
+    dp_patch_file(${spdlogSrcDir}/CMakeLists.txt ADD_BEFORE "set(CMAKE_BUILD_TYPE" "#")
 endfunction ()
 
 function (configureSpdLog)
