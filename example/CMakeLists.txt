@@ -14,15 +14,16 @@ dp_configure_global(
     DEPENDENCIES_TARGETS_FOLDER Dependencies
 )
 
-dp_download_and_add_dependency(URL https://github.com/fmtlib/fmt/archive/refs/tags/9.1.0.zip)
+include(cmake/Dependencies.cmake)
 
 add_executable(${PROJECT_NAME})
-target_link_libraries(${PROJECT_NAME} fmt::fmt)
+target_link_libraries(${PROJECT_NAME} spdlog::spdlog)
+
+add_subdirectory(cmake)
 add_subdirectory(src)
 
 dp_configure_target(${PROJECT_NAME}
     DP_WARNINGS
     VS_STARTUP_PROJECT
-    WIN32_RELEASE
     AUTO_SOURCE_GROUP
 )
