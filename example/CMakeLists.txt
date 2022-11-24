@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.16.0...3.25.0)
 
-project(Example VERSION 0.0.1 LANGUAGES CXX)
+project(Example VERSION 0.0.4 LANGUAGES CXX)
 
 include(FetchContent)
-FetchContent_Declare(dpCMake URL https://github.com/GroPask/dpCMake/archive/refs/tags/v0.0.3.zip)
+FetchContent_Declare(dpCMake URL https://github.com/GroPask/dpCMake/archive/refs/tags/v0.0.4.zip)
 FetchContent_MakeAvailable(dpCMake)
 include(${dpcmake_SOURCE_DIR}/dpCMake.cmake)
 

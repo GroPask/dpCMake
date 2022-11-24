@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16.0...3.25.0)
 
-project(Test VERSION 0.0.1 LANGUAGES CXX)
+project(Test VERSION 0.0.4 LANGUAGES CXX)
 
 include(../dpCMake.cmake)
 
