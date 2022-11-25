@@ -124,7 +124,7 @@ function (dp_download_and_add_dependency)
         endif ()
 
         get_directory_property(dependenciesTargetsFolder DP_DEPENDENCIES_TARGETS_FOLDER)
-        if (DEFINED dependenciesTargetsFolder)
+        if (DEFINED dependenciesTargetsFolder AND NOT dependenciesTargetsFolder STREQUAL "")
             dp_get_targets_list(newTargets DIRECTORY ${dependencySrcDir} RECURSE)
 
             foreach (newTarget ${newTargets})
