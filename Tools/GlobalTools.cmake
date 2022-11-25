@@ -19,5 +19,5 @@ function (dp_set_generated_source_group generatedSourceGroup)
 endfunction ()
 
 function (dp_set_dependencies_targets_folder folder)
-    set_property(GLOBAL PROPERTY DP_DEPENDENCIES_TARGETS_FOLDER ${folder})  
+    set_property(DIRECTORY PROPERTY DP_DEPENDENCIES_TARGETS_FOLDER ${folder})  
 endfunction ()

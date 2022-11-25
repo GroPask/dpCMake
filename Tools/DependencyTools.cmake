@@ -122,7 +122,7 @@ function (dp_download_and_add_dependency)
             add_subdirectory(${dependencySrcDir} ${dependencyBinDir} EXCLUDE_FROM_ALL SYSTEM)
         endif ()
 
-        get_property(dependenciesTargetsFolder GLOBAL PROPERTY DP_DEPENDENCIES_TARGETS_FOLDER)
+        get_property(dependenciesTargetsFolder DIRECTORY PROPERTY DP_DEPENDENCIES_TARGETS_FOLDER)
         if (DEFINED dependenciesTargetsFolder)
             dp_get_targets_list(newTargets DIRECTORY ${dependencySrcDir} RECURSE)
 
