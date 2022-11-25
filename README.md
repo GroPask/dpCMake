@@ -87,4 +87,4 @@ dp_get_targets_list(
 
 ## License
 
-dpCMake is licensed under the zlib License, see [LICENSE.md](https://github.com/GroPask/ImApp/blob/main/LICENSE.md) for more information.
+dpCMake is licensed under the zlib License, see [LICENSE.md](https://github.com/GroPask/dpCMake/blob/main/LICENSE.md) for more information.
