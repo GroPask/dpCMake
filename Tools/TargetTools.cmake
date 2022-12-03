@@ -48,7 +48,13 @@ function (dp_generate_install_for_target target)
     configure_package_config_file(cmake/${target}Config.cmake.in ${configOut} INSTALL_DESTINATION ${exportDestDir})
     write_basic_package_version_file(${versionOut} COMPATIBILITY SameMajorVersion)
 
-    install(TARGETS ${target} EXPORT ${target}Targets)
+    install(TARGETS ${target} EXPORT ${target}Targets
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_LIBDIR}/${target}
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    )
+
     install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/ PATTERN CMakeLists.txt EXCLUDE)
     install(EXPORT ${target}Targets DESTINATION ${exportDestDir} NAMESPACE ${target}:: FILE ${target}Targets.cmake)    
     install(FILES ${configOut} ${versionOut} DESTINATION ${exportDestDir})
