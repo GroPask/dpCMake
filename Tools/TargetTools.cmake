@@ -37,7 +37,12 @@ function (dp_target_auto_source_group target)
     endforeach ()
 endfunction ()
 
-function (dp_generate_install_for_target target configInFilePath)
+function (dp_target_generate_install target)
+    set(options PUBLIC_HEADER_FROM_INTERFACE_SOURCES INSTALL_INCLUDE_FOLDER)
+    set(oneValueArgs CONFIG_IN)
+    set(multiValueArgs)
+    cmake_parse_arguments(STANDARD_INSTALL_OPTIONS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+
     include(GNUInstallDirs)
 
     set(exporTargetsName ${target}Targets)
@@ -46,11 +51,34 @@ function (dp_generate_install_for_target target configInFilePath)
     set(versionOut ${CMAKE_CURRENT_BINARY_DIR}/${target}ConfigVersion.cmake)
 
     include(CMakePackageConfigHelpers) 
-    configure_package_config_file(${configInFilePath} ${configOut} INSTALL_DESTINATION ${exportDestDir})
+
+    if (DEFINED STANDARD_INSTALL_OPTIONS_CONFIG_IN)
+        configure_package_config_file(${STANDARD_INSTALL_OPTIONS_CONFIG_IN} ${configOut} INSTALL_DESTINATION ${exportDestDir})
+    endif ()
+
     write_basic_package_version_file(${versionOut} COMPATIBILITY SameMajorVersion)
 
-    install(TARGETS ${target} EXPORT ${exporTargetsName})
-    install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/ PATTERN CMakeLists.txt EXCLUDE)
-    install(EXPORT ${exporTargetsName} DESTINATION ${exportDestDir} NAMESPACE ${target}:: FILE ${exporTargetsName}.cmake)    
-    install(FILES ${configOut} ${versionOut} DESTINATION ${exportDestDir})
+    if (STANDARD_INSTALL_OPTIONS_PUBLIC_HEADER_FROM_INTERFACE_SOURCES)
+        get_target_property(interfaceSources ${target} INTERFACE_SOURCES)
+        set_target_properties(${target} PROPERTIES PUBLIC_HEADER ${interfaceSources})
+    endif ()
+
+    install(TARGETS ${target} EXPORT ${exporTargetsName}
+        PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${target}
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    )
+
+    if (STANDARD_INSTALL_OPTIONS_INSTALL_INCLUDE_FOLDER)
+        install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/ PATTERN CMakeLists.txt EXCLUDE)
+    endif ()
+
+    install(EXPORT ${exporTargetsName} DESTINATION ${exportDestDir} NAMESPACE ${target}:: FILE ${exporTargetsName}.cmake)
+
+    if (DEFINED STANDARD_INSTALL_OPTIONS_CONFIG_IN)
+        install(FILES ${configOut} DESTINATION ${exportDestDir})
+    endif ()
+
+    install(FILES ${versionOut} DESTINATION ${exportDestDir})
 endfunction ()

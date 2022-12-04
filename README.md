@@ -18,7 +18,7 @@ FetchContent_MakeAvailable(dpCMake)
 include(${dpcmake_SOURCE_DIR}/dpCMake.cmake)
 ```
 
-#### Global configuration
+#### Global tools
 ```cmake
 dp_set_use_folders()
 dp_set_default_configurations(Debug Release)
@@ -35,7 +35,7 @@ dp_configure_global(
 )
 ```
 
-#### Target configuration
+#### Target tools
 ```cmake
 dp_target_configure_warnings(target)
 dp_target_set_vs_startup_project(target)
@@ -49,6 +49,14 @@ dp_configure_target(target
     VS_STARTUP_PROJECT
     WIN32_RELEASE
     AUTO_SOURCE_GROUP
+)
+
+# Install generation
+
+dp_target_generate_install(target
+    CONFIG_IN cmake/MyLibConfig.cmake.in
+    PUBLIC_HEADER_FROM_INTERFACE_SOURCES
+    INSTALL_INCLUDE_FOLDER
 )
 ```
 #### Dependency tools
