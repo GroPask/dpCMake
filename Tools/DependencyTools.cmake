@@ -128,9 +128,9 @@ function (dp_download_and_add_dependency)
             dp_get_targets_list(newTargets DIRECTORY ${dependencySrcDir} RECURSE)
 
             foreach (newTarget ${newTargets})
-                get_target_property(newTargetType ${newTarget} TYPE)
+                get_target_property(newIsImported ${newTarget} IMPORTED)
 
-                if (NOT ${newTargetType} STREQUAL "INTERFACE_LIBRARY")                    
+                if (NOT newIsImported)                   
                     set_target_properties(${newTarget} PROPERTIES FOLDER ${dependenciesTargetsFolder})
                 endif ()
             endforeach ()
