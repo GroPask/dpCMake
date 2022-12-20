@@ -1,5 +1,12 @@
 include_guard()
 
+function (dp_assert)
+    if (NOT ${ARGN})
+        string(REPLACE ";" " " formattedCondition "${ARGN}")
+        message(FATAL_ERROR "Assertion failed: '${formattedCondition}'")
+    endif ()
+endfunction ()
+
 function (dp_patch_file filePath)
     if (NOT EXISTS ${filePath})
         file(TOUCH ${filePath})

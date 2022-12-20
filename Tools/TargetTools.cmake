@@ -37,6 +37,21 @@ function (dp_target_auto_source_group target)
     endforeach ()
 endfunction ()
 
+function (dp_target_find_source absoluteSourceOutVar target wantedSourceName)
+    get_target_property(sources ${target} SOURCES)
+
+    foreach (source ${sources})        
+        get_filename_component(sourceName ${source} NAME)
+
+        if (${sourceName} STREQUAL ${wantedSourceName})
+            get_filename_component(absoluteSource ${source} ABSOLUTE)
+            set(${absoluteSourceOutVar} ${absoluteSource} PARENT_SCOPE)
+
+            return()
+        endif ()        
+    endforeach ()
+endfunction ()
+
 function (dp_target_generate_install target)
     set(options PUBLIC_HEADER_FROM_INTERFACE_SOURCES INSTALL_INCLUDE_FOLDER)
     set(oneValueArgs CONFIG_IN)

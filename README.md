@@ -51,7 +51,9 @@ dp_configure_target(target
     AUTO_SOURCE_GROUP
 )
 
-# Install generation
+# Misc
+
+dp_target_find_source(myHeaderAbsolute target "MyHeader.hpp")
 
 dp_target_generate_install(target
     CONFIG_IN cmake/MyLibConfig.cmake.in
@@ -76,6 +78,8 @@ dp_download_and_adddependency(
 
 #### Misc tools
 ```cmake
+dp_assert(${myVar} GREATER_EQUAL 0)
+
 dp_patch_file(filePath
     REPLACE "ToReplace" "ReplacingString"
     REMOVE "ToRemove"
