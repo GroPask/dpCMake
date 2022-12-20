@@ -49,7 +49,7 @@ dp_configure_target(${PROJECT_NAME}
 )
 
 dp_target_find_source(absoluteMainCpp ${PROJECT_NAME} "main.cpp")
-dp_assert(${absoluteMainCpp} STREQUAL "src/main.cpp")
+dp_assert(${absoluteMainCpp} STREQUAL "${CMAKE_CURRENT_LIST_DIR}/src/main.cpp")
 
 enable_testing()
 add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})
