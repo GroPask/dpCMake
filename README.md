@@ -65,9 +65,21 @@ dp_target_generate_install(target
 ```
 #### Dependency tools
 ```cmake
-dp_add_relative_directory("../MyRelativeProject")
+dp_add_relative_directory(
+    "../MyRelativeProject"
+    ALREADY_POPULATED_VAR myRelativeProjectWasAlreadyPopulated
+    SRC_DIR_VAR myRelativeProjectSrcDir
+    BIN_DIR_VAR myRelativeProjectBinDir
+)
 
-dp_download_and_adddependency(
+dp_add_relative_dependency(                             # Same as dp_add_relative_directory but use DEPENDENCIES_TARGETS_FOLDER
+    "../MyRelativeProject"
+    ALREADY_POPULATED_VAR myRelativeProjectWasAlreadyPopulated
+    SRC_DIR_VAR myRelativeProjectSrcDir
+    BIN_DIR_VAR myRelativeProjectBinDir
+)
+
+dp_download_and_add_dependency(
     GIT_REPOSITORY https://github.com/fmtlib/fmt.git    # Or URL, SVN_REPOSITORY, HG_REPOSITORY, CVS_REPOSITORY
     GIT_TAG 9.1.0                                       # Or anything supported by FetchContent_Declare
     PATCH_FUNC patchFmt

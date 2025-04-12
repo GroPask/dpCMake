@@ -22,14 +22,91 @@ function (_dp_compute_fetch_content_name outFetchContentNameVar originalPath)
     set(${outFetchContentNameVar} ${fetchContentName} PARENT_SCOPE)
 endfunction ()
 
+function (_dp_manage_dependency_target_folder dependencySrcDir)
+    get_directory_property(dependenciesTargetsFolder DP_DEPENDENCIES_TARGETS_FOLDER)
+    if (DEFINED dependenciesTargetsFolder AND NOT dependenciesTargetsFolder STREQUAL "")
+        dp_get_targets_list(newTargets DIRECTORY ${dependencySrcDir} RECURSE)
+
+        foreach (newTarget ${newTargets})
+            get_target_property(newIsImported ${newTarget} IMPORTED)
+
+            if (NOT newIsImported)                   
+                set_target_properties(${newTarget} PROPERTIES FOLDER ${dependenciesTargetsFolder})
+            endif ()
+        endforeach ()
+    endif ()
+endfunction ()
+
 function (dp_add_relative_directory relativePath)
+    set(options)
+    set(oneValueArgs ALREADY_POPULATED_VAR SRC_DIR_VAR BIN_DIR_VAR)
+    set(multiValueArgs)
+    cmake_parse_arguments(DP_ADD_RELATIVE_DIRECTORY "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+    
     _dp_compute_fetch_content_name(fetchContentName ${relativePath})
 
     FetchContent_Declare(${fetchContentName}
         SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/${relativePath}"
     )
 
-    FetchContent_MakeAvailable(${fetchContentName})
+    FetchContent_GetProperties(${fetchContentName})
+    if (NOT ${fetchContentName}_POPULATED)
+        FetchContent_Populate(${fetchContentName})
+
+        set(alreadyPopulated false)
+        set(srcDir ${${fetchContentName}_SOURCE_DIR})
+        set(binDir ${${fetchContentName}_BINARY_DIR})
+    else ()
+        set(alreadyPopulated TRUE)
+        set(srcDir ${${fetchContentName}_SOURCE_DIR})
+        set(binDir ${${fetchContentName}_BINARY_DIR})
+    endif ()
+
+    if (${CMAKE_VERSION} VERSION_LESS "3.25.0") 
+        add_subdirectory(${srcDir} ${binDir})
+    else ()
+        add_subdirectory(${srcDir} ${binDir} SYSTEM)
+    endif ()
+
+    if (DEFINED DP_ADD_RELATIVE_DIRECTORY_ALREADY_POPULATED_VAR)
+        set(${DP_ADD_RELATIVE_DIRECTORY_ALREADY_POPULATED_VAR} ${alreadyPopulated} PARENT_SCOPE)
+    endif ()
+
+    if (DEFINED DP_ADD_RELATIVE_DIRECTORY_SRC_DIR_VAR)
+        set(${DP_ADD_RELATIVE_DIRECTORY_SRC_DIR_VAR} ${srcDir} PARENT_SCOPE)
+    endif ()
+
+    if (DEFINED DP_ADD_RELATIVE_DIRECTORY_BIN_DIR_VAR)   
+        set(${DP_ADD_RELATIVE_DIRECTORY_BIN_DIR_VAR} ${binDir} PARENT_SCOPE)
+    endif ()
+endfunction ()
+
+function (dp_add_relative_dependency)
+    set(options)
+    set(oneValueArgs ALREADY_POPULATED_VAR SRC_DIR_VAR BIN_DIR_VAR)
+    set(multiValueArgs)
+    cmake_parse_arguments(DP_ADD_RELATIVE_DEPENDENCY "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+    
+    dp_add_relative_directory(
+        ${DP_ADD_RELATIVE_DEPENDENCY_UNPARSED_ARGUMENTS}
+        ALREADY_POPULATED_VAR dependencyWasAlreadyPopulated
+        SRC_DIR_VAR dependencySrcDir
+        BIN_DIR_VAR dependencyBinDir
+    )
+    
+    _dp_manage_dependency_target_folder(${dependencySrcDir})
+
+    if (DEFINED DP_ADD_RELATIVE_DEPENDENCY_ALREADY_POPULATED_VAR)
+        set(${DP_ADD_RELATIVE_DEPENDENCY_ALREADY_POPULATED_VAR} ${dependencyWasAlreadyPopulated} PARENT_SCOPE)
+    endif ()
+    
+    if (DEFINED DP_ADD_RELATIVE_DEPENDENCY_SRC_DIR_VAR)
+        set(${DP_ADD_RELATIVE_DEPENDENCY_SRC_DIR_VAR} ${dependencySrcDir} PARENT_SCOPE)
+    endif ()
+
+    if (DEFINED DP_ADD_RELATIVE_DEPENDENCY_BIN_DIR_VAR)
+        set(${DP_ADD_RELATIVE_DEPENDENCY_BIN_DIR_VAR} ${dependencyBinDir} PARENT_SCOPE)
+    endif ()
 endfunction ()
 
 function (dp_download_dependency)
@@ -122,19 +199,8 @@ function (dp_download_and_add_dependency)
         else ()
             add_subdirectory(${dependencySrcDir} ${dependencyBinDir} EXCLUDE_FROM_ALL SYSTEM)
         endif ()
-
-        get_directory_property(dependenciesTargetsFolder DP_DEPENDENCIES_TARGETS_FOLDER)
-        if (DEFINED dependenciesTargetsFolder AND NOT dependenciesTargetsFolder STREQUAL "")
-            dp_get_targets_list(newTargets DIRECTORY ${dependencySrcDir} RECURSE)
-
-            foreach (newTarget ${newTargets})
-                get_target_property(newIsImported ${newTarget} IMPORTED)
-
-                if (NOT newIsImported)                   
-                    set_target_properties(${newTarget} PROPERTIES FOLDER ${dependenciesTargetsFolder})
-                endif ()
-            endforeach ()
-        endif ()
+        
+        _dp_manage_dependency_target_folder(${dependencySrcDir})
     endif ()
 
     if (DEFINED DP_DOWNLOAD_AND_ADD_DEPENDENCY_ALREADY_POPULATED_VAR)
