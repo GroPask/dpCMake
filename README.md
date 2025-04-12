@@ -49,6 +49,7 @@ dp_target_auto_source_group(target)
 dp_configure_target(target
     DP_WARNINGS
     VS_STARTUP_PROJECT
+    VS_STARTUP_PROJECT_IF_TOP_LEVEL
     WIN32_RELEASE
     AUTO_SOURCE_GROUP
 )
