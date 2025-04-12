@@ -29,7 +29,9 @@ dp_set_dependencies_targets_folder(Dependencies)
 
 dp_configure_global(
     USE_FOLDERS
+    USE_FOLDERS_IF_TOP_LEVEL
     DEFAULT_CONFIGURATIONS Debug Release
+    DEFAULT_CONFIGURATIONS_IF_TOP_LEVEL Debug Release
     GENERATED_SOURCE_GROUP Generated
     DEPENDENCIES_TARGETS_FOLDER Dependencies
 )
