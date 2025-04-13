@@ -62,11 +62,7 @@ function (dp_add_relative_directory relativePath)
         set(binDir ${${fetchContentName}_BINARY_DIR})
     endif ()
 
-    if (${CMAKE_VERSION} VERSION_LESS "3.25.0") 
-        add_subdirectory(${srcDir} ${binDir})
-    else ()
-        add_subdirectory(${srcDir} ${binDir} SYSTEM)
-    endif ()
+    add_subdirectory(${srcDir} ${binDir})
 
     if (DEFINED DP_ADD_RELATIVE_DIRECTORY_ALREADY_POPULATED_VAR)
         set(${DP_ADD_RELATIVE_DIRECTORY_ALREADY_POPULATED_VAR} ${alreadyPopulated} PARENT_SCOPE)
@@ -178,7 +174,7 @@ endfunction ()
 
 function (dp_download_and_add_dependency)
     set(options)
-    set(oneValueArgs CONFIGURE_FUNC ALREADY_POPULATED_VAR SRC_DIR_VAR BIN_DIR_VAR)
+    set(oneValueArgs ALREADY_POPULATED_VAR SRC_DIR_VAR BIN_DIR_VAR)
     set(multiValueArgs)
     cmake_parse_arguments(DP_DOWNLOAD_AND_ADD_DEPENDENCY "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
@@ -189,19 +185,13 @@ function (dp_download_and_add_dependency)
         BIN_DIR_VAR dependencyBinDir
     )
 
-    if (NOT ${dependencyWasAlreadyPopulated})
-        if (DEFINED DP_DOWNLOAD_AND_ADD_DEPENDENCY_CONFIGURE_FUNC)
-            cmake_language(CALL ${DP_DOWNLOAD_AND_ADD_DEPENDENCY_CONFIGURE_FUNC})
-        endif ()
-
-        if (${CMAKE_VERSION} VERSION_LESS "3.25.0") 
-            add_subdirectory(${dependencySrcDir} ${dependencyBinDir} EXCLUDE_FROM_ALL)
-        else ()
-            add_subdirectory(${dependencySrcDir} ${dependencyBinDir} EXCLUDE_FROM_ALL SYSTEM)
-        endif ()
-        
-        _dp_manage_dependency_target_folder(${dependencySrcDir})
+    if (${CMAKE_VERSION} VERSION_LESS "3.25.0") 
+        add_subdirectory(${dependencySrcDir} ${dependencyBinDir} EXCLUDE_FROM_ALL)
+    else ()
+        add_subdirectory(${dependencySrcDir} ${dependencyBinDir} EXCLUDE_FROM_ALL SYSTEM)
     endif ()
+        
+    _dp_manage_dependency_target_folder(${dependencySrcDir})
 
     if (DEFINED DP_DOWNLOAD_AND_ADD_DEPENDENCY_ALREADY_POPULATED_VAR)
         set(${DP_DOWNLOAD_AND_ADD_DEPENDENCY_ALREADY_POPULATED_VAR} ${dependencyWasAlreadyPopulated} PARENT_SCOPE)
