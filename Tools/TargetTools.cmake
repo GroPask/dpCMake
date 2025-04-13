@@ -97,3 +97,10 @@ function (dp_target_generate_install target)
 
     install(FILES ${versionOut} DESTINATION ${exportDestDir})
 endfunction ()
+
+function (dp_target_copy_known_dlls_near_executable target)
+    add_custom_command(TARGET ${target} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy -t $<TARGET_FILE_DIR:${target}> $<TARGET_RUNTIME_DLLS:${target}>
+        COMMAND_EXPAND_LISTS
+    )
+endfunction ()

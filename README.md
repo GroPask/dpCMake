@@ -43,6 +43,7 @@ dp_target_configure_warnings(target)
 dp_target_set_vs_startup_project(target)
 dp_target_set_win32_executable_in_realease(target)
 dp_target_auto_source_group(target)
+dp_target_copy_known_dlls_near_executable(target)
 
 # Or
 
@@ -52,6 +53,7 @@ dp_configure_target(target
     VS_STARTUP_PROJECT_IF_TOP_LEVEL
     WIN32_RELEASE
     AUTO_SOURCE_GROUP
+    COPY_KNOWN_DLLS_NEAR_EXECUTABLE
 )
 
 # Misc
