@@ -84,7 +84,7 @@ function (dp_patch_file filePath)
         endif ()
     endwhile ()
 
-    file(WRITE ${filePath} ${fileContent})
+    file(WRITE ${filePath} "${fileContent}")
 endfunction ()
 
 function (dp_get_targets_list outTargetsListVar)
