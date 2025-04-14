@@ -70,15 +70,11 @@ dp_target_generate_install(target
 ```cmake
 dp_add_relative_directory(
     "../MyRelativeProject"
-    ALREADY_POPULATED_VAR myRelativeProjectWasAlreadyPopulated
-    SRC_DIR_VAR myRelativeProjectSrcDir
     BIN_DIR_VAR myRelativeProjectBinDir
 )
 
 dp_add_relative_dependency(                             # Same as dp_add_relative_directory but use DEPENDENCIES_TARGETS_FOLDER
     "../MyRelativeProject"
-    ALREADY_POPULATED_VAR myRelativeProjectWasAlreadyPopulated
-    SRC_DIR_VAR myRelativeProjectSrcDir
     BIN_DIR_VAR myRelativeProjectBinDir
 )
 

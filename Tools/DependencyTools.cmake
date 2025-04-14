@@ -39,40 +39,15 @@ endfunction ()
 
 function (dp_add_relative_directory relativePath)
     set(options)
-    set(oneValueArgs ALREADY_POPULATED_VAR SRC_DIR_VAR BIN_DIR_VAR)
+    set(oneValueArgs BIN_DIR_VAR)
     set(multiValueArgs)
     cmake_parse_arguments(DP_ADD_RELATIVE_DIRECTORY "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
     
     _dp_compute_fetch_content_name(fetchContentName ${relativePath})
-
-    FetchContent_Declare(${fetchContentName}
-        SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/${relativePath}"
-    )
-
-    FetchContent_GetProperties(${fetchContentName})
-    if (NOT ${fetchContentName}_POPULATED)
-        FetchContent_Populate(${fetchContentName}
-            SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/${relativePath}"
-        )
-
-        set(alreadyPopulated false)
-        set(srcDir ${${fetchContentName}_SOURCE_DIR})
-        set(binDir ${${fetchContentName}_BINARY_DIR})
-    else ()
-        set(alreadyPopulated TRUE)
-        set(srcDir ${${fetchContentName}_SOURCE_DIR})
-        set(binDir ${${fetchContentName}_BINARY_DIR})
-    endif ()
-
-    add_subdirectory(${srcDir} ${binDir})
-
-    if (DEFINED DP_ADD_RELATIVE_DIRECTORY_ALREADY_POPULATED_VAR)
-        set(${DP_ADD_RELATIVE_DIRECTORY_ALREADY_POPULATED_VAR} ${alreadyPopulated} PARENT_SCOPE)
-    endif ()
-
-    if (DEFINED DP_ADD_RELATIVE_DIRECTORY_SRC_DIR_VAR)
-        set(${DP_ADD_RELATIVE_DIRECTORY_SRC_DIR_VAR} ${srcDir} PARENT_SCOPE)
-    endif ()
+    
+    set(binDir ${CMAKE_CURRENT_BINARY_DIR}/_relative_deps/${fetchContentName}-build)
+    
+    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/${relativePath} ${binDir})
 
     if (DEFINED DP_ADD_RELATIVE_DIRECTORY_BIN_DIR_VAR)   
         set(${DP_ADD_RELATIVE_DIRECTORY_BIN_DIR_VAR} ${binDir} PARENT_SCOPE)
@@ -81,27 +56,17 @@ endfunction ()
 
 function (dp_add_relative_dependency)
     set(options)
-    set(oneValueArgs ALREADY_POPULATED_VAR SRC_DIR_VAR BIN_DIR_VAR)
+    set(oneValueArgs BIN_DIR_VAR)
     set(multiValueArgs)
     cmake_parse_arguments(DP_ADD_RELATIVE_DEPENDENCY "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
     
     dp_add_relative_directory(
         ${DP_ADD_RELATIVE_DEPENDENCY_UNPARSED_ARGUMENTS}
-        ALREADY_POPULATED_VAR dependencyWasAlreadyPopulated
-        SRC_DIR_VAR dependencySrcDir
         BIN_DIR_VAR dependencyBinDir
     )
     
-    _dp_manage_dependency_target_folder(${dependencySrcDir})
-
-    if (DEFINED DP_ADD_RELATIVE_DEPENDENCY_ALREADY_POPULATED_VAR)
-        set(${DP_ADD_RELATIVE_DEPENDENCY_ALREADY_POPULATED_VAR} ${dependencyWasAlreadyPopulated} PARENT_SCOPE)
-    endif ()
+    _dp_manage_dependency_target_folder(${CMAKE_CURRENT_SOURCE_DIR}/${relativePath})
     
-    if (DEFINED DP_ADD_RELATIVE_DEPENDENCY_SRC_DIR_VAR)
-        set(${DP_ADD_RELATIVE_DEPENDENCY_SRC_DIR_VAR} ${dependencySrcDir} PARENT_SCOPE)
-    endif ()
-
     if (DEFINED DP_ADD_RELATIVE_DEPENDENCY_BIN_DIR_VAR)
         set(${DP_ADD_RELATIVE_DEPENDENCY_BIN_DIR_VAR} ${dependencyBinDir} PARENT_SCOPE)
     endif ()
@@ -134,6 +99,8 @@ function (dp_download_dependency)
     endif ()
 
     _dp_compute_fetch_content_name(fetchContentName ${downloadAddress})
+    message("Download:" ${fetchContentName})
+    message("Address:" ${downloadAddress})
 
     FetchContent_Declare(${fetchContentName}
         ${downloadMethod} ${downloadAddress}
