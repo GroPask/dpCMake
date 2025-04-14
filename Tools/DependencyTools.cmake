@@ -51,7 +51,11 @@ function (dp_add_relative_directory relativePath)
 
     FetchContent_GetProperties(${fetchContentName})
     if (NOT ${fetchContentName}_POPULATED)
-        FetchContent_Populate(${fetchContentName})
+        FetchContent_Populate(${fetchContentName}
+            SUBBUILD_DIR ${fetchContentName}-subbuild
+            SOURCE_DIR ${fetchContentName}-src
+            BINARY_DIR ${fetchContentName}-build
+        )
 
         set(alreadyPopulated false)
         set(srcDir ${${fetchContentName}_SOURCE_DIR})
@@ -140,7 +144,11 @@ function (dp_download_dependency)
 
     FetchContent_GetProperties(${fetchContentName})
     if (NOT ${fetchContentName}_POPULATED)
-        FetchContent_Populate(${fetchContentName})
+        FetchContent_Populate(${fetchContentName}
+            SUBBUILD_DIR ${fetchContentName}-subbuild
+            SOURCE_DIR ${fetchContentName}-src
+            BINARY_DIR ${fetchContentName}-build
+        )
 
         set(alreadyPopulated false)
         set(srcDir ${${fetchContentName}_SOURCE_DIR})
