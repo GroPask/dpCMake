@@ -99,8 +99,6 @@ function (dp_download_dependency)
     endif ()
 
     _dp_compute_fetch_content_name(fetchContentName ${downloadAddress})
-    message("Download:" ${fetchContentName})
-    message("Address:" ${downloadAddress})
 
     FetchContent_Declare(${fetchContentName}
         ${downloadMethod} ${downloadAddress}
