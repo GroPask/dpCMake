@@ -52,8 +52,7 @@ function (dp_add_relative_directory relativePath)
     FetchContent_GetProperties(${fetchContentName})
     if (NOT ${fetchContentName}_POPULATED)
         FetchContent_Populate(${fetchContentName}
-            SUBBUILD_DIR ${fetchContentName}-subbuild
-            BINARY_DIR ${fetchContentName}-build
+            SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/${relativePath}"
         )
 
         set(alreadyPopulated false)
@@ -144,8 +143,8 @@ function (dp_download_dependency)
     FetchContent_GetProperties(${fetchContentName})
     if (NOT ${fetchContentName}_POPULATED)
         FetchContent_Populate(${fetchContentName}
-            SUBBUILD_DIR ${fetchContentName}-subbuild
-            BINARY_DIR ${fetchContentName}-build
+            ${downloadMethod} ${downloadAddress}
+            ${DP_DOWNLOAD_DEPENDENCY_UNPARSED_ARGUMENTS}
         )
 
         set(alreadyPopulated false)
