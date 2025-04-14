@@ -53,7 +53,6 @@ function (dp_add_relative_directory relativePath)
     if (NOT ${fetchContentName}_POPULATED)
         FetchContent_Populate(${fetchContentName}
             SUBBUILD_DIR ${fetchContentName}-subbuild
-            SOURCE_DIR ${fetchContentName}-src
             BINARY_DIR ${fetchContentName}-build
         )
 
@@ -146,7 +145,6 @@ function (dp_download_dependency)
     if (NOT ${fetchContentName}_POPULATED)
         FetchContent_Populate(${fetchContentName}
             SUBBUILD_DIR ${fetchContentName}-subbuild
-            SOURCE_DIR ${fetchContentName}-src
             BINARY_DIR ${fetchContentName}-build
         )
 
