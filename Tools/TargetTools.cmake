@@ -8,7 +8,7 @@ function (dp_target_set_vs_startup_project target)
     set_property(DIRECTORY ${PROJECT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${target})
 endfunction ()
 
-function (dp_target_auto_source_group target)
+function (_dp_target_do_auto_source_group target)
     get_target_property(sources ${target} SOURCES)
 
     get_target_property(targetSourceDir ${target} SOURCE_DIR)
@@ -35,6 +35,12 @@ function (dp_target_auto_source_group target)
             source_group(TREE ${CMAKE_SOURCE_DIR} FILES ${absoluteSource})
         endif ()
     endforeach ()
+endfunction ()
+
+function (dp_target_auto_source_group target)
+    cmake_language(EVAL CODE
+        "cmake_language(DEFER CALL _dp_target_do_auto_source_group [[${target}]])"
+    )
 endfunction ()
 
 function (dp_target_find_source absoluteSourceOutVar target wantedSourceName)
