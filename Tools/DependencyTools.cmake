@@ -99,18 +99,16 @@ function (dp_download_dependency)
     endif ()
 
     _dp_compute_fetch_content_name(fetchContentName ${downloadAddress})
-    message("Download:" ${fetchContentName})
-    message("Address:" ${downloadAddress})
 
     FetchContent_Declare(${fetchContentName}
-        ${downloadMethod} ${downloadAddress}
+        ${downloadMethod} ${downloadAddress} 
         ${DP_DOWNLOAD_DEPENDENCY_UNPARSED_ARGUMENTS}
     )
 
     FetchContent_GetProperties(${fetchContentName})
     if (NOT ${fetchContentName}_POPULATED)
         FetchContent_Populate(${fetchContentName}
-            ${downloadMethod} ${downloadAddress}
+            ${downloadMethod} ${downloadAddress} 
             ${DP_DOWNLOAD_DEPENDENCY_UNPARSED_ARGUMENTS}
         )
 
