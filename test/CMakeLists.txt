@@ -49,6 +49,7 @@ dp_configure_target(${PROJECT_NAME}
     VS_STARTUP_PROJECT_IF_TOP_LEVEL
     WIN32_RELEASE
     AUTO_SOURCE_GROUP
+    COPY_KNOWN_DLLS_NEAR_EXECUTABLE
 )
 
 dp_target_find_source(absoluteMainCpp ${PROJECT_NAME} "main.cpp")
