@@ -8,7 +8,6 @@ dp_configure_global(
     USE_FOLDERS_IF_TOP_LEVEL
     DEFAULT_CONFIGURATIONS_IF_TOP_LEVEL Debug Release
     GENERATED_SOURCE_GROUP Generated
-    DEPENDENCIES_TARGETS_FOLDER Dependencies
 )
 
 include(cmake/Dependencies.cmake)
@@ -22,5 +21,6 @@ add_subdirectory(src)
 dp_configure_target(${PROJECT_NAME}
     DP_WARNINGS
     VS_STARTUP_PROJECT_IF_TOP_LEVEL
+    AUTO_FOLDER
     AUTO_SOURCE_GROUP
 )
