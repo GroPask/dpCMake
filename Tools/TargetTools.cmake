@@ -8,6 +8,14 @@ function (dp_target_set_vs_startup_project target)
     set_property(DIRECTORY ${PROJECT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${target})
 endfunction ()
 
+function (dp_target_auto_folder target)
+    _dp_cmake_ensure_auto_folder_properties()
+    set_directory_properties(PROPERTIES DP_CMAKE_PROJECT_NAME ${PROJECT_NAME})
+    set_directory_properties(PROPERTIES DP_CMAKE_PROJECT_SOURCE_DIR ${PROJECT_SOURCE_DIR})
+    set_target_properties(${target} PROPERTIES DP_CMAKE_AUTO_FOLDER ON)
+    _dp_cmake_ensure_final_func()
+endfunction ()
+
 function (_dp_target_do_auto_source_group target)
     get_target_property(sources ${target} SOURCES)
 

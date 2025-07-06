@@ -22,21 +22,6 @@ function (_dp_compute_fetch_content_name outFetchContentNameVar originalPath)
     set(${outFetchContentNameVar} ${fetchContentName} PARENT_SCOPE)
 endfunction ()
 
-function (_dp_manage_dependency_target_folder dependencySrcDir)
-    get_directory_property(dependenciesTargetsFolder DP_DEPENDENCIES_TARGETS_FOLDER)
-    if (DEFINED dependenciesTargetsFolder AND NOT dependenciesTargetsFolder STREQUAL "")
-        dp_get_targets_list(newTargets DIRECTORY ${dependencySrcDir} RECURSE)
-
-        foreach (newTarget ${newTargets})
-            get_target_property(newIsImported ${newTarget} IMPORTED)
-
-            if (NOT newIsImported)                   
-                set_target_properties(${newTarget} PROPERTIES FOLDER ${dependenciesTargetsFolder})
-            endif ()
-        endforeach ()
-    endif ()
-endfunction ()
-
 function (dp_add_relative_directory relativePath)
     set(options)
     set(oneValueArgs BIN_DIR_VAR)
@@ -45,27 +30,37 @@ function (dp_add_relative_directory relativePath)
     
     _dp_compute_fetch_content_name(fetchContentName ${relativePath})
     
-    set(binDir ${CMAKE_CURRENT_BINARY_DIR}/_relative_deps/${fetchContentName}-build)
+    set(srcDir ${CMAKE_CURRENT_SOURCE_DIR})
+    cmake_path(APPEND srcDir ${relativePath})
+    cmake_path(NORMAL_PATH srcDir)
     
-    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/${relativePath} ${binDir})
+    set(binDir ${CMAKE_BINARY_DIR})
+    cmake_path(APPEND binDir _relative_deps)
+    cmake_path(APPEND binDir ${fetchContentName}-build)
+    cmake_path(NORMAL_PATH binDir)
+    
+    add_subdirectory(${srcDir} ${binDir})
 
     if (DEFINED DP_ADD_RELATIVE_DIRECTORY_BIN_DIR_VAR)   
         set(${DP_ADD_RELATIVE_DIRECTORY_BIN_DIR_VAR} ${binDir} PARENT_SCOPE)
     endif ()
 endfunction ()
 
-function (dp_add_relative_dependency)
+function (dp_add_relative_dependency relativePath)
     set(options)
     set(oneValueArgs BIN_DIR_VAR)
     set(multiValueArgs)
     cmake_parse_arguments(DP_ADD_RELATIVE_DEPENDENCY "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
     
-    dp_add_relative_directory(
-        ${DP_ADD_RELATIVE_DEPENDENCY_UNPARSED_ARGUMENTS}
+    dp_add_relative_directory(${relativePath}
         BIN_DIR_VAR dependencyBinDir
     )
     
-    _dp_manage_dependency_target_folder(${CMAKE_CURRENT_SOURCE_DIR}/${relativePath})
+    set(relativeDependencyPath ${CMAKE_CURRENT_SOURCE_DIR})
+    cmake_path(APPEND relativeDependencyPath ${relativePath})
+    cmake_path(NORMAL_PATH relativeDependencyPath)
+    
+    _dp_cmake_manage_dependency_dir(${relativeDependencyPath})
     
     if (DEFINED DP_ADD_RELATIVE_DEPENDENCY_BIN_DIR_VAR)
         set(${DP_ADD_RELATIVE_DEPENDENCY_BIN_DIR_VAR} ${dependencyBinDir} PARENT_SCOPE)
@@ -101,20 +96,41 @@ function (dp_download_dependency)
     _dp_compute_fetch_content_name(fetchContentName ${downloadAddress})
 
     FetchContent_Declare(${fetchContentName}
-        ${downloadMethod} ${downloadAddress}
-        ${DP_DOWNLOAD_DEPENDENCY_UNPARSED_ARGUMENTS}
+            ${downloadMethod} ${downloadAddress}
+            QUIET
+            SOURCE_DIR ${srcDir}
+            SUBBUILD_DIR ${subBinDir}
+            BINARY_DIR ${binDir}
+            ${DP_DOWNLOAD_DEPENDENCY_UNPARSED_ARGUMENTS}
     )
+    
+    set(srcDir ${CMAKE_BINARY_DIR})
+    cmake_path(APPEND srcDir _deps)
+    cmake_path(APPEND srcDir ${fetchContentName}-src)
+        
+    set(subBinDir ${CMAKE_BINARY_DIR})
+    cmake_path(APPEND subBinDir _deps)
+    cmake_path(APPEND subBinDir ${fetchContentName}-subbuild)
+        
+    set(binDir ${CMAKE_BINARY_DIR})
+    cmake_path(APPEND binDir _deps)
+    cmake_path(APPEND binDir ${fetchContentName}-build)
 
-    FetchContent_GetProperties(${fetchContentName})
     if (NOT ${fetchContentName}_POPULATED)
+        set(${fetchContentName}_POPULATED ON CACHE INTERNAL "")
+    
+        set(alreadyPopulated false)
+        
+        message(STATUS "Downloading ${downloadAddress}")
+    
         FetchContent_Populate(${fetchContentName}
             ${downloadMethod} ${downloadAddress}
+            QUIET
+            SOURCE_DIR ${srcDir}
+            SUBBUILD_DIR ${subBinDir}
+            BINARY_DIR ${binDir}
             ${DP_DOWNLOAD_DEPENDENCY_UNPARSED_ARGUMENTS}
         )
-
-        set(alreadyPopulated false)
-        set(srcDir ${${fetchContentName}_SOURCE_DIR})
-        set(binDir ${${fetchContentName}_BINARY_DIR})
 
         if (DEFINED DP_DOWNLOAD_DEPENDENCY_PATCH_FUNC)
             set(patchMarkFile "${srcDir}/patchedByDpCMake.junk")
@@ -125,8 +141,6 @@ function (dp_download_dependency)
         endif ()
     else ()
         set(alreadyPopulated TRUE)
-        set(srcDir ${${fetchContentName}_SOURCE_DIR})
-        set(binDir ${${fetchContentName}_BINARY_DIR})
     endif ()
 
     if (DEFINED DP_DOWNLOAD_DEPENDENCY_ALREADY_POPULATED_VAR)
@@ -160,8 +174,8 @@ function (dp_download_and_add_dependency)
     else ()
         add_subdirectory(${dependencySrcDir} ${dependencyBinDir} EXCLUDE_FROM_ALL SYSTEM)
     endif ()
-        
-    _dp_manage_dependency_target_folder(${dependencySrcDir})
+    
+    _dp_cmake_manage_dependency_dir(${dependencySrcDir})
 
     if (DEFINED DP_DOWNLOAD_AND_ADD_DEPENDENCY_ALREADY_POPULATED_VAR)
         set(${DP_DOWNLOAD_AND_ADD_DEPENDENCY_ALREADY_POPULATED_VAR} ${dependencyWasAlreadyPopulated} PARENT_SCOPE)

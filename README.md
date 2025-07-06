@@ -23,7 +23,6 @@ include(${dpcmake_SOURCE_DIR}/dpCMake.cmake)
 dp_set_use_folders()
 dp_set_default_configurations(Debug Release)
 dp_set_generated_source_group(Generated)
-dp_set_dependencies_targets_folder(Dependencies)
 
 # Or
 
@@ -33,7 +32,6 @@ dp_configure_global(
     DEFAULT_CONFIGURATIONS Debug Release
     DEFAULT_CONFIGURATIONS_IF_TOP_LEVEL Debug Release
     GENERATED_SOURCE_GROUP Generated
-    DEPENDENCIES_TARGETS_FOLDER Dependencies
 )
 ```
 
@@ -42,6 +40,7 @@ dp_configure_global(
 dp_target_configure_warnings(target)
 dp_target_set_vs_startup_project(target)
 dp_target_set_win32_executable_in_realease(target)
+dp_target_auto_folder(target)
 dp_target_auto_source_group(target)
 dp_target_copy_known_dlls_near_executable(target)
 
@@ -52,6 +51,7 @@ dp_configure_target(target
     VS_STARTUP_PROJECT
     VS_STARTUP_PROJECT_IF_TOP_LEVEL
     WIN32_RELEASE
+    AUTO_FOLDER
     AUTO_SOURCE_GROUP
     COPY_KNOWN_DLLS_NEAR_EXECUTABLE
 )
